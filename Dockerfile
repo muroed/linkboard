@@ -25,7 +25,7 @@ RUN addgroup --system --gid 1001 nodejs \
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --chown=nextjs:nodejs linkboard.yaml /config/linkboard.yaml
+COPY --chown=nextjs:nodejs linkboard.yaml.example /config/linkboard.yaml
 
 USER nextjs
 EXPOSE 3000
