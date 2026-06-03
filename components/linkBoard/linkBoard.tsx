@@ -1,6 +1,5 @@
 "use client";
 
-import data from "@/config";
 import Link from "next/link";
 import {
   HeaderContainer,
@@ -12,25 +11,33 @@ import {
   LinkContainer,
   Container,
 } from "@/components/linkBoard/linkBoardStyles";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ShareBar from "@/components/sharebar/sharebar";
 import nameRandomizer from "@/utils/nameRandomizer";
 import Loading from "@/components/loading/loading";
 import Source from "@/components/source/source";
+import { useConfig } from "@/context/configContext";
+import { resolveLinkIcon } from "@/lib/iconRegistry";
 
 export default function LinkBoard() {
+  const config = useConfig();
   const [loading, setLoading] = useState(true);
-  const [randomizedName, setRandomizedName] = useState(data.name);
+  const [randomizedName, setRandomizedName] = useState(config.name);
+
+  const links = useMemo(() => {
+    const items = [...config.links];
+    if (config.sortByLength) {
+      items.sort((a, b) => (a.name.length > b.name.length ? 1 : -1));
+    }
+    return items;
+  }, [config.links, config.sortByLength]);
 
   useEffect(() => {
     setLoading(false);
-    if (data.animation && data.animation?.nameRandomizer) {
-      nameRandomizer({ name: data.name, setRandomizedName });
+    if (config.animation?.nameRandomizer) {
+      nameRandomizer({ name: config.name, setRandomizedName });
     }
-    if (data.sortByLength) {
-      data.links.sort((a, b) => (a.name.length > b.name.length ? 1 : -1));
-    }
-  }, []);
+  }, [config.animation?.nameRandomizer, config.name]);
 
   if (loading) return <Loading />;
 
@@ -46,18 +53,21 @@ export default function LinkBoard() {
         />
         <InfoContainer>
           <Name>{randomizedName}</Name>
-          <Description>{data.description}</Description>
+          <Description>{config.description}</Description>
         </InfoContainer>
       </HeaderContainer>
-      <LinksContainer $linksNumber={data.links.length}>
-        {data.links.map((link, index) => (
-          <LinkContainer key={link.url} $delay={index * 100}>
-            <Link href={link.url}>
-              {link.icon && <link.icon />}
-              {link.name}
-            </Link>
-          </LinkContainer>
-        ))}
+      <LinksContainer $linksNumber={links.length}>
+        {links.map((link, index) => {
+          const Icon = resolveLinkIcon(link.icon);
+          return (
+            <LinkContainer key={link.url} $delay={index * 100}>
+              <Link href={link.url}>
+                {Icon && <Icon />}
+                {link.name}
+              </Link>
+            </LinkContainer>
+          );
+        })}
       </LinksContainer>
       <Source />
     </Container>

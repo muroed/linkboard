@@ -1,0 +1,17 @@
+LinkBoard — Modified Version
+===========================
+
+This application is based on LinkBoard
+(https://github.com/hangerthem/linkboard)
+Copyright (C) Frank Borisjuk and contributors.
+
+Modifications Copyright (C) 2026 Daniil Donetskov
+
+Licensed under the GNU Affero General Public License v3.0 or later.
+See the LICENSE file for the full license text.
+
+When you run a modified version on a network server (AGPL section 13),
+you must offer users the Corresponding Source. Configure `sourceUrl` in
+linkboard.yaml to point at the repository containing your modified source.
+
+Upstream project: https://github.com/hangerthem/linkboard

@@ -1,73 +1,88 @@
 # LinkBoard
 
-![GitHub Repo Size](https://img.shields.io/github/repo-size/hangerthem/linkboard)
-![GitHub Issues](https://img.shields.io/github/issues/hangerthem/linkboard)
-![GitHub Stars](https://img.shields.io/github/stars/hangerthem/linkboard)
-![GitHub Forks](https://img.shields.io/github/forks/hangerthem/linkboard)
+![GitHub Repo Size](https://img.shields.io/github/repo-size/muroed/linkboard)
+![GitHub Issues](https://img.shields.io/github/issues/muroed/linkboard)
+![GitHub Stars](https://img.shields.io/github/stars/muroed/linkboard)
+![GitHub Forks](https://img.shields.io/github/forks/muroed/linkboard)
 
-LinkBoard is a web application that allows you to create a personalized link board, similar to a bulletin board, to share your important links with others. It's a simple and customizable way to showcase your online presence.
+LinkBoard is a web application that allows you to create a personalized link board, similar to a bulletin board, to share your important links with others.
+
+Based on [hangerthem/linkboard](https://github.com/hangerthem/linkboard). See [NOTICE](NOTICE) for license and attribution.
 
 ## Features
 
-- **Customizable**: Tailor your LinkBoard to your preferences with a variety of customization options.
-- **Responsive**: LinkBoard is designed to work seamlessly on all screen sizes and devices.
-- **Beautiful Design**: Enjoy an attractive and user-friendly design that enhances your online presence.
-- **Easy to Use**: Setting up and managing your LinkBoard is straightforward and hassle-free.
+- **YAML configuration**: Change name, links, metadata, and theme without rebuilding (Docker/runtime).
+- **Customizable**: Themes, animations, profile and background images.
+- **Responsive**: Works on all screen sizes.
+- **Docker**: Standalone image with optional mounted config.
 
-## Installation
+## Configuration
 
-1. Clone this repository:
+Edit `linkboard.yaml` in the project root (copy from `linkboard.yaml.example`).
+
+| Field | Description |
+|-------|-------------|
+| `title` | Browser tab title |
+| `theme` | `default`, `dark`, or `light` (see `themes/themes.ts`) |
+| `name`, `description` | Profile heading |
+| `links` | List of `{ name, url, icon? }` — `icon` is a [react-bootstrap-icons](https://github.com/alphagov/react-bootstrap-icons) export name |
+| `metadata.author` | SEO author name and URL |
+| `metadata.creator`, `metadata.publisher` | SEO fields |
+| `sourceUrl` | AGPL source link (Git icon in the corner) |
+| `animation.nameRandomizer` | Scramble name animation |
+| `sortByLength` | Sort links by label length |
+
+Override config path:
 
 ```bash
-git clone https://github.com/hangerthem/LinkBoard.git
-cd LinkBoard
+export LINKBOARD_CONFIG_PATH=/path/to/linkboard.yaml
 ```
 
-2. Install the necessary dependencies:
+## Local development
 
 ```bash
 npm install
-```
-
-3. Start the development server:
-
-```bash
 npm run dev
 ```
 
-4. Visit `http://localhost:3000` in your web browser to see your LinkBoard in action.
+Open http://localhost:3000
 
-## Usage
+## Docker
 
-1. Customize your LinkBoard by editing the configuration file `config.ts` to include your name, description, and social links.
+Build and run with the default baked-in config:
 
-2. Customize the visual theme by modifying the `theme.ts` file. You can change the colors and fonts to suit your preferences. After that change the `theme` property in the `config.ts` file to your theme name.
+```bash
+docker build -t linkboard .
+docker run --rm -p 3000:3000 linkboard
+```
 
-3. Add your profile picture by replacing the existing image at `/public/profile.png`.
+Use your own config without rebuilding:
 
-4. Add background image by replacing the existing image at `/public/background.webp`.
+```bash
+docker run --rm -p 3000:3000 \
+  -v "$(pwd)/linkboard.yaml:/config/linkboard.yaml:ro" \
+  linkboard
+```
 
-5. Add links to your LinkBoard in the `config.ts` file. You can include the name, URL, and an optional icon.
+Or with Compose:
 
-6. Customize the app's title in the `config.ts` file.
+```bash
+docker compose up --build
+```
 
-7. Deploy your LinkBoard to a hosting service of your choice.
+GitHub Actions builds and pushes the image to `ghcr.io/<owner>/<repo>` on push to `main`/`master` and on version tags `v*`.
 
-Additionally, there are some animations you can toggle in the `config.ts` file, also you can choose to sort the links by their lenght to make the board look more organized.
+## Assets
 
-## Contributing
-
-I welcome contributions from the community. If you'd like to contribute to this project, please follow my [Contribution Guidelines](CONTRIBUTING).
+- Profile: `/public/profile.png`
+- Background: `/public/background.webp`
 
 ## License
 
-This project is licensed under the AGPLv3 License. For more information, please refer to the [LICENSE](LICENSE) file.
+This project is licensed under the **GNU Affero General Public License v3.0** (AGPL-3.0). See [LICENSE](LICENSE) and [NOTICE](NOTICE).
 
-## Contact
+If you deploy a modified version on a public server, you must provide users access to the corresponding source (AGPL §13). Set `sourceUrl` in `linkboard.yaml` to your public repository.
 
-- **Frank Borisjuk**
-  - Email: [f.borisjuk@hangerthem.com](mailto:f.borisjuk@hangerthem.com)
+## Upstream
 
-Feel free to reach out if you have any questions, suggestions, or need assistance.
-
-_Happy LinkBoarding!_
+Original project by Frank Borisjuk — [hangerthem/linkboard](https://github.com/hangerthem/linkboard).

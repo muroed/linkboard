@@ -1,4 +1,19 @@
-interface Data {
+export interface LinkboardLink {
+  name: string;
+  url: string;
+  icon?: string;
+}
+
+export interface LinkboardMetadata {
+  author: {
+    name: string;
+    url: string;
+  };
+  creator: string;
+  publisher: string;
+}
+
+export interface LinkboardConfig {
   title?: string;
   theme?: string;
   name: string;
@@ -6,10 +21,8 @@ interface Data {
   animation?: {
     nameRandomizer: boolean;
   };
-  links: {
-    name: string;
-    url: string;
-    icon?: any;
-  }[];
+  links: LinkboardLink[];
   sortByLength?: boolean;
+  metadata: LinkboardMetadata;
+  sourceUrl: string;
 }

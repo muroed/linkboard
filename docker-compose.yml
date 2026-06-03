@@ -1,0 +1,9 @@
+services:
+  linkboard:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./linkboard.yaml:/config/linkboard.yaml:ro
+    environment:
+      LINKBOARD_CONFIG_PATH: /config/linkboard.yaml
